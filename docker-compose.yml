@@ -1,0 +1,20 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile-back
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile-front
+    ports:
+      - "80:80"
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"

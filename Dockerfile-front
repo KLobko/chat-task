@@ -1,0 +1,17 @@
+# Используем базовый образ с поддержкой Nginx
+FROM nginx:latest
+
+# Копируем содержимое папки с фронтендом в папку Nginx
+COPY front/ /usr/share/nginx/html
+
+# Создаем директорию для node_modules внутри контейнера
+RUN mkdir -p /usr/share/nginx/html/node_modules
+
+# Копируем только необходимые файлы node_modules внутрь контейнера
+COPY front/node_modules/angular/ /usr/share/nginx/html/node_modules/angular/
+
+# Публикуем порт 80
+EXPOSE 80
+
+# Команда запуска nginx внутри контейнера
+CMD ["nginx", "-g", "daemon off;"]

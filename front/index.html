@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="node_modules/angular/angular.js"></script>
+</head>
+<body>
+    <div class="app-container" ng-app="app" ng-controller="messagesController">
+        <div class="show-messages">
+            <div class="title-info">
+                <h2 class="title">Messages</h2>
+                <img ng-click="openEditModal()" src="./assets/add.png" alt="change icon">
+            </div>
+            <div class="filters" ng-cloak>
+                <div class="radio-buttons">
+                    <label><input type="radio" ng-model="searchType" value="all" ng-change="handleSearchTypeChange()"> Get all messages</label>
+                    <label><input type="radio" ng-model="searchType" value="name" ng-change="handleSearchTypeChange()"> By Name</label>
+                    <label><input type="radio" ng-model="searchType" value="date" ng-change="handleSearchTypeChange()"> By Date</label>
+                </div>
+
+                <div class="search-name-container" ng-show="searchType === 'name'">
+                    <label for="name">Name</label>
+                    <input class="search-name" id="search-name" type="text" ng-model="searchName" placeholder="Enter name...">
+                </div>
+
+                <div class="search-date-container" ng-show="searchType === 'date'">
+                    <div class="date">
+                        <label for="startDate">Start Date</label>
+                        <input type="datetime-local" id="startDate" ng-model="startDate">
+                    </div>
+
+                    <div class="date">
+                        <label for="endDate">End Date</label>
+                        <input type="datetime-local" id="endDate" ng-model="endDate">
+                    </div>
+                </div>
+
+                <button ng-click="showMessages()">Show</button>
+            </div>
+        </div>
+        <div ng-if="filteredMessages && filteredMessages.length" class="border"></div>
+        <div class="messages" ng-cloak>
+            <ul class="messages-container">
+                <li class="message" ng-repeat="message in filteredMessages">
+                    <div class="message-container">
+                        <div class="message-container__info">
+                            <div title="{{message.name}}" class="info-name">
+                                {{ message.name }}
+                            </div>
+                            <div class="date">
+                                {{ formatDateTime(message.date) }}
+                            </div>
+                        </div>
+                        <div title="{{message.message}}" class="message-container-content">
+                            {{ message.message }}
+                        </div>
+                    </div>
+                    <img ng-click="openEditModal(message)" src="./assets/change.svg" alt="change icon">
+                </li>
+            </ul>
+        </div>
+        <div id="modal" class="form">
+            <div class="form-container">
+                <span class="close" ng-click="closeModal()">&times;</span>
+                <h2 class="title">
+                    {{getTitleModalName()}}
+                </h2>
+                <form name="modalForm" novalidate>
+                    <label for="nameInput">Name</label>
+                    <input type="text" id="nameInput" ng-model="nameValue" placeholder="Enter name..." required>
+                    
+                    <label for="messageInput">Message</label>
+                    <input type="text" id="messageInput" ng-model="messageValue" placeholder="Enter message..." required>
+
+                    <label for="dateInput">Date</label>
+                    <input type="datetime-local" id="dateInput" ng-model="dateValue" placeholder="Select date..." required>
+                    
+                    <button ng-click="saveChanges()" ng-disabled="modalForm.$invalid">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="js/app.js" defer></script>
+    <script src="js/controllers/messages-controller.js" defer></script>
+    <script src="js/services/message-service.js" defer></script>
+</body>
+</html>
